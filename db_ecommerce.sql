@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2019 at 08:16 AM
--- Server version: 10.1.36-MariaDB
--- PHP Version: 5.6.38
+-- Generation Time: Oct 11, 2024 at 05:51 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -35,10 +34,10 @@ CREATE TABLE `messagein` (
   `MessageFrom` varchar(80) DEFAULT NULL,
   `MessageTo` varchar(80) DEFAULT NULL,
   `SMSC` varchar(80) DEFAULT NULL,
-  `MessageText` text,
+  `MessageText` text DEFAULT NULL,
   `MessageType` varchar(80) DEFAULT NULL,
   `MessageParts` int(11) DEFAULT NULL,
-  `MessagePDU` text,
+  `MessagePDU` text DEFAULT NULL,
   `Gateway` varchar(80) DEFAULT NULL,
   `UserId` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -69,17 +68,17 @@ CREATE TABLE `messagelog` (
   `StatusText` varchar(80) DEFAULT NULL,
   `MessageTo` varchar(80) DEFAULT NULL,
   `MessageFrom` varchar(80) DEFAULT NULL,
-  `MessageText` text,
+  `MessageText` text DEFAULT NULL,
   `MessageType` varchar(80) DEFAULT NULL,
   `MessageId` varchar(80) DEFAULT NULL,
   `ErrorCode` varchar(80) DEFAULT NULL,
   `ErrorText` varchar(80) DEFAULT NULL,
   `Gateway` varchar(80) DEFAULT NULL,
   `MessageParts` int(11) DEFAULT NULL,
-  `MessagePDU` text,
+  `MessagePDU` text DEFAULT NULL,
   `Connector` varchar(80) DEFAULT NULL,
   `UserId` varchar(80) DEFAULT NULL,
-  `UserInfo` text
+  `UserInfo` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -125,16 +124,16 @@ CREATE TABLE `messageout` (
   `Id` int(11) NOT NULL,
   `MessageTo` varchar(80) DEFAULT NULL,
   `MessageFrom` varchar(80) DEFAULT NULL,
-  `MessageText` text,
+  `MessageText` text DEFAULT NULL,
   `MessageType` varchar(80) DEFAULT NULL,
   `Gateway` varchar(80) DEFAULT NULL,
   `UserId` varchar(80) DEFAULT NULL,
-  `UserInfo` text,
+  `UserInfo` text DEFAULT NULL,
   `Priority` int(11) DEFAULT NULL,
   `Scheduled` datetime DEFAULT NULL,
   `ValidityPeriod` int(11) DEFAULT NULL,
-  `IsSent` tinyint(1) NOT NULL DEFAULT '0',
-  `IsRead` tinyint(1) NOT NULL DEFAULT '0'
+  `IsSent` tinyint(1) NOT NULL DEFAULT 0,
+  `IsRead` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -157,8 +156,8 @@ CREATE TABLE `tblautonumber` (
 --
 
 INSERT INTO `tblautonumber` (`ID`, `AUTOSTART`, `AUTOINC`, `AUTOEND`, `AUTOKEY`, `AUTONUM`) VALUES
-(1, '2017', 1, 43, 'PROID', 10),
-(2, '0', 1, 95, 'ordernumber', 0);
+(1, '2017', 1, 62, 'PROID', 10),
+(2, '0', 1, 102, 'ordernumber', 0);
 
 -- --------------------------------------------------------
 
@@ -177,16 +176,9 @@ CREATE TABLE `tblcategory` (
 --
 
 INSERT INTO `tblcategory` (`CATEGID`, `CATEGORIES`, `USERID`) VALUES
-(5, 'SHOES', 0),
-(11, 'BAGS', 0),
-(12, 'CLOTHING', 0),
-(13, 'INTERIORS', 0),
-(14, 'HOUSEHOLDS', 0),
-(15, 'FASHION', 0),
-(16, 'KIDS', 0),
-(17, 'WOMENS', 0),
-(18, 'MENS', 0),
-(19, 'SPORTSWEAR', 0);
+(20, 'PORK', 0),
+(21, 'BEEF', 0),
+(22, 'CHICKEN', 0);
 
 -- --------------------------------------------------------
 
@@ -230,7 +222,8 @@ INSERT INTO `tblcustomer` (`CUSTOMERID`, `FNAME`, `LNAME`, `MNAME`, `CUSHOMENUM`
 (6, 'Janry', 'Tan', '', '', '', '', 'Kab City', '', '', '0000-00-00', 'Male', '0234234', '', 0, 'jan', '0271c5467994a9e88e01be5b7e1f5f43d0ab93d2', '', 1, '2018-04-01'),
 (7, 'Jake', 'Cuenca', '', '', '', '', 'Kabankalan City', '', '', '0000-00-00', 'Male', '639305235027', '', 0, 'jake', '403ba16f713c8371eef121530a922824be29b68a', '', 1, '2018-04-16'),
 (8, 'Jake', 'Tam', '', '', '', '', 'Kab City', '', '', '0000-00-00', 'Male', '021312312', '', 0, 'j', '30e1fe53111f7e583c382596a32885fd27283970', '', 1, '2018-09-23'),
-(9, 'Annie', 'Paredes', '', '', '', '', 's', '', '', '0000-00-00', 'Female', '12312312', '', 0, 'an', 'aa46142b604e671794a84129896d4dec508dec81', 'customer_image/shirt2.jpg', 1, '2019-08-20');
+(9, 'Annie', 'Paredes', '', '', '', '', 's', '', '', '0000-00-00', 'Female', '12312312', '', 0, 'an', 'aa46142b604e671794a84129896d4dec508dec81', 'customer_image/shirt2.jpg', 1, '2019-08-20'),
+(10, 'Raibelle', 'Altura', '', '', '', '', 'Lipa City', '', '', '0000-00-00', 'Male', '123456789', '', 0, 'RAIBELLE', '8f22d3fc64145f4b543aabc5ecb268e9f1e7bb97', 'customer_image/Screenshot 2022-06-21 160018.png', 1, '2024-10-09');
 
 -- --------------------------------------------------------
 
@@ -254,7 +247,14 @@ CREATE TABLE `tblorder` (
 INSERT INTO `tblorder` (`ORDERID`, `PROID`, `ORDEREDQTY`, `ORDEREDPRICE`, `ORDEREDNUM`, `USERID`) VALUES
 (1, 201737, 4, 476, 93, 0),
 (2, 201740, 3, 447, 93, 0),
-(3, 201738, 1, 199, 94, 0);
+(3, 201738, 1, 199, 94, 0),
+(4, 201738, 1, 199, 95, 0),
+(5, 201738, 1, 199, 96, 0),
+(6, 201740, 1, 149, 97, 0),
+(7, 201743, 1, 100, 98, 0),
+(8, 201748, 1, 300, 99, 0),
+(9, 201751, 3, 600, 100, 0),
+(10, 201761, 1, 180, 101, 0);
 
 -- --------------------------------------------------------
 
@@ -281,12 +281,24 @@ CREATE TABLE `tblproduct` (
 --
 
 INSERT INTO `tblproduct` (`PROID`, `PRODESC`, `INGREDIENTS`, `PROQTY`, `ORIGINALPRICE`, `PROPRICE`, `CATEGID`, `IMAGES`, `PROSTATS`, `OWNERNAME`, `OWNERPHONE`) VALUES
-(201737, 'KILY Korean Casual Sleeveless Dress Printed Dress 5a0019                      ', '', 5, 100, 119, 12, 'uploaded_photos/korean.jpeg', 'Available', 'janobe', ''),
-(201738, 'terno top and pants korean fashion boho terno summer terno for women  ', '', 3, 150, 199, 12, 'uploaded_photos/terno.jpg', 'Available', 'janobe', ''),
-(201739, '4Color Menâ€²S Denim Pants STRETCHABLE Skinny Black/Blue', '', 5, 250, 289, 18, 'uploaded_photos/jeans.jpg', 'Available', 'janobe', ''),
-(201740, 'SIMPLE Fashion Men`S Casual T Shirt Short Sleeve Round neck Top', '', 1, 100, 149, 18, 'uploaded_photos/shirt.jpg', 'Available', 'janobe', ''),
-(201741, 'ICM #T146 BESTSELLER TOPS TSHIRT FOR MEN', '', 4, 50, 89, 18, 'uploaded_photos/shirt2.jpg', 'Available', 'janobe', ''),
-(201742, 'CJY-001 Coat Rack Creative Simple CoatRack Bedroom Wardrobe (Gray)', '', 4, 250, 287, 14, 'uploaded_photos/bed.jpeg', 'Available', 'janobe', '');
+(201743, 'PORK HAMLEG                      ', '', 9, 100, 100, 20, 'uploaded_photos/Hamleg.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201745, 'PORK BACK FAT SKIN', '', 10, 100, 100, 20, 'uploaded_photos/Pork Backfat Skin.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201746, 'PORK BACK FAT SKINLESS', '', 10, 100, 100, 20, 'uploaded_photos/Pork backfat Skinless.jpeg', 'Available', '', '633215943111'),
+(201747, 'PORK BELLY BISO', '', 10, 200, 200, 20, 'uploaded_photos/Pork Belly Biso.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201748, 'PORK BELLY', '', 19, 300, 300, 20, 'uploaded_photos/Pork Belly.webp', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201749, 'PORK EAR', '', 10, 80, 80, 20, 'uploaded_photos/Pork Ear.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201750, 'PORK FLOWER ( BULAKLAK )', '', 10, 150, 150, 20, 'uploaded_photos/PORK FLOWER.webp', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201751, 'PORK MASK ( MASKARA )', '', 7, 200, 200, 20, 'uploaded_photos/Pork Mask.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201752, 'PORK PATA', '', 10, 400, 400, 0, 'uploaded_photos/Pork Pata.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201753, 'BEEF FOREQUARTER', '', 10, 300, 300, 21, 'uploaded_photos/Beef Forequarter.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201754, 'BEEF SHANK ( BULALO )', '', 10, 350, 350, 21, 'uploaded_photos/beef Shank(Bulalo).webp', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201755, 'BEEF TRIPE ( TUWALYA )', '', 10, 200, 200, 21, 'uploaded_photos/Beef Tripe.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201756, 'CHICKEN BREAST', '', 10, 200, 200, 22, 'uploaded_photos/Chicken Breast Fillet.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201757, 'CHICKEN DRUMMETS', '', 10, 180, 180, 22, 'uploaded_photos/Chicken Drumettes.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201758, 'CHICKEN DRUMSTICK', '', 10, 180, 180, 22, 'uploaded_photos/Chicken Drumstick.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201759, 'CHICKEN LIVER', '', 10, 120, 120, 22, 'uploaded_photos/Chicken Liver.jfif', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201760, 'CHICKEN SKIN', '', 10, 100, 100, 22, 'uploaded_photos/Chicken Skin.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111'),
+(201761, 'CHICKEN WINGS', '', 9, 180, 180, 22, 'uploaded_photos/Chicken Wings.jpg', 'Available', 'APRIL AND MARC FROZEN MEAT TRADING', '633215943111');
 
 -- --------------------------------------------------------
 
@@ -313,7 +325,25 @@ INSERT INTO `tblpromopro` (`PROMOID`, `PROID`, `PRODISCOUNT`, `PRODISPRICE`, `PR
 (3, 201739, 0, 289, 0, 0),
 (4, 201740, 0, 149, 0, 0),
 (5, 201741, 0, 89, 0, 0),
-(6, 201742, 0, 287, 0, 0);
+(6, 201742, 0, 287, 0, 0),
+(7, 201743, 0, 100, 0, 0),
+(9, 201745, 0, 100, 0, 0),
+(10, 201746, 0, 100, 0, 0),
+(11, 201747, 0, 200, 0, 0),
+(12, 201748, 0, 300, 0, 0),
+(13, 201749, 0, 80, 0, 0),
+(14, 201750, 0, 150, 0, 0),
+(15, 201751, 0, 200, 0, 0),
+(16, 201752, 0, 400, 0, 0),
+(17, 201753, 0, 300, 0, 0),
+(18, 201754, 0, 350, 0, 0),
+(19, 201755, 0, 200, 0, 0),
+(20, 201756, 0, 200, 0, 0),
+(21, 201757, 0, 180, 0, 0),
+(22, 201758, 0, 180, 0, 0),
+(23, 201759, 0, 120, 0, 0),
+(24, 201760, 0, 100, 0, 0),
+(25, 201761, 0, 180, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -333,8 +363,9 @@ CREATE TABLE `tblsetting` (
 --
 
 INSERT INTO `tblsetting` (`SETTINGID`, `PLACE`, `BRGY`, `DELPRICE`) VALUES
-(1, 'Kabankalan City', 'Brgy. 1', 50),
-(2, 'Himamaylan City', 'Brgy. 1', 70);
+(1, 'Lipa City', 'Brgy. 1', 50),
+(2, 'Batangas City', 'Brgy. 1', 70),
+(3, 'Tanauan City', 'Brgy. Ulango', 250);
 
 -- --------------------------------------------------------
 
@@ -377,8 +408,15 @@ CREATE TABLE `tblsummary` (
 --
 
 INSERT INTO `tblsummary` (`SUMMARYID`, `ORDEREDDATE`, `CUSTOMERID`, `ORDEREDNUM`, `DELFEE`, `PAYMENT`, `PAYMENTMETHOD`, `ORDEREDSTATS`, `ORDEREDREMARKS`, `CLAIMEDADTE`, `HVIEW`, `USERID`) VALUES
-(1, '2019-08-21 06:24:24', 9, 93, 0, 0, 'Cash on Delivery', 'Pending', 'Your order is on process.', '0000-00-00 00:00:00', 1, 0),
-(3, '2019-08-21 06:27:09', 9, 94, 70, 269, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2019-08-21 00:00:00', 1, 0);
+(1, '2019-08-21 06:24:24', 9, 93, 0, 0, 'Cash on Delivery', 'Cancelled', 'Your order has been cancelled due to lack of communication and incomplete information.', '0000-00-00 00:00:00', 0, 0),
+(3, '2019-08-21 06:27:09', 9, 94, 70, 269, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2019-08-21 00:00:00', 1, 0),
+(4, '2024-10-09 02:52:42', 10, 95, 50, 199, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 1, 0),
+(5, '2024-10-09 04:03:09', 10, 96, 0, 199, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 0, 0),
+(6, '2024-10-09 04:32:36', 10, 97, 50, 149, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 0, 0),
+(7, '2024-10-09 05:21:48', 10, 98, 50, 100, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 0, 0),
+(8, '2024-10-09 05:44:25', 10, 99, 70, 350, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 1, 0),
+(9, '2024-10-09 06:07:29', 10, 100, 50, 670, 'Cash on Delivery', 'Confirmed', 'Your order has been confirmed.', '2024-10-09 00:00:00', 1, 0),
+(10, '2024-10-09 06:09:16', 10, 101, 250, 180, 'Cash on Delivery', 'Pending', 'Your order is on process.', '0000-00-00 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -400,9 +438,8 @@ CREATE TABLE `tbluseraccount` (
 --
 
 INSERT INTO `tbluseraccount` (`USERID`, `U_NAME`, `U_USERNAME`, `U_PASS`, `U_ROLE`, `USERIMAGE`) VALUES
-(124, 'Kenjie Palacios', 'kenjie', '4752fe635442d048e8e8d2d1d845e6a578f30470', 'Administrator', 'photos/COC-war-base-design.jpg'),
-(126, 'Janobe Palacios', 'janobe', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Administrator', 'photos/10329236_874204835938922_6636897990257224477_n.jpg'),
-(127, 'Craig Palacios', 'craig', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Administrator', '');
+(128, 'Raibelle Altura', 'raibelle', 'c380dab8154c165ce9945a125008df19836bde6a', 'Administrator', 'photos/Screenshot 2022-06-21 160018.png'),
+(129, 'Stemart Kenji', 'Kenji@gmail.com', '059b8b880f8441509ec8a65b50b4c6ae74ebea76', 'Administrator', '');
 
 -- --------------------------------------------------------
 
@@ -423,7 +460,8 @@ CREATE TABLE `tblwishlist` (
 --
 
 INSERT INTO `tblwishlist` (`id`, `CUSID`, `PROID`, `WISHDATE`, `WISHSTATS`) VALUES
-(2, 9, 201742, '2019-08-21', '0');
+(2, 9, 201742, '2019-08-21', '0'),
+(3, 10, 201740, '2024-10-09', '0');
 
 --
 -- Indexes for dumped tables
@@ -557,31 +595,31 @@ ALTER TABLE `tblautonumber`
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `CATEGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `CATEGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `tblcustomer`
 --
 ALTER TABLE `tblcustomer`
-  MODIFY `CUSTOMERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `CUSTOMERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tblorder`
 --
 ALTER TABLE `tblorder`
-  MODIFY `ORDERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ORDERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tblpromopro`
 --
 ALTER TABLE `tblpromopro`
-  MODIFY `PROMOID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `PROMOID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `tblsetting`
 --
 ALTER TABLE `tblsetting`
-  MODIFY `SETTINGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SETTINGID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tblstockin`
@@ -593,19 +631,19 @@ ALTER TABLE `tblstockin`
 -- AUTO_INCREMENT for table `tblsummary`
 --
 ALTER TABLE `tblsummary`
-  MODIFY `SUMMARYID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `SUMMARYID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tbluseraccount`
 --
 ALTER TABLE `tbluseraccount`
-  MODIFY `USERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `USERID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT for table `tblwishlist`
 --
 ALTER TABLE `tblwishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
